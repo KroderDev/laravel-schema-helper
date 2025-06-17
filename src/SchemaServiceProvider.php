@@ -5,7 +5,7 @@ namespace Kroderdev\SchemaHelper;
 use Illuminate\Support\ServiceProvider;
 use Kroderdev\SchemaHelper\SchemaHelper;
 
-class SchemaHelperProvider extends ServiceProvider
+class SchemaServiceProvider extends ServiceProvider
 {
     /**
      * Register services.

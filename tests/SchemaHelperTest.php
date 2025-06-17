@@ -22,7 +22,7 @@ class SchemaHelperTest extends TestCase
 {
     protected function getPackageProviders($app)
     {
-        return [Kroderdev\SchemaHelper\SchemaHelperProvider::class];
+        return [Kroderdev\SchemaHelper\SchemaServiceProvider::class];
     }
 
     public function test_schema_is_generated()
