@@ -10,7 +10,7 @@ class SchemaHelper
     /**
      * Generates a JSON schema from a FormRequest.
      *
-     * @param FormRequest  $request  Instance of FormRequest
+     * @param \Illuminate\Foundation\Http\FormRequest  $request  Instance of FormRequest
      * @return SchemaBuilder
      */
     public static function generateFromRequest(FormRequest $request): SchemaBuilder
