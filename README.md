@@ -1,9 +1,20 @@
 # Laravel-Schema-Helper
 Generate portable form schemas from Laravel FormRequests
 
+## Installation
+
 ```bash
-composer require kroderdev/schema-helper
+composer require kroderdev/laravel-schema-helper
 ```
+
+### Optional: Publish the Configuration File
+
+To customize the default behavior of the Schema Helper package, you may publish the configuration file:
+
+```bash
+php artisan vendor:publish --tag=config --provider="Kroderdev\SchemaHelper\SchemaServiceProvider"
+```
+
 
 ## Basic Usage
 
@@ -21,8 +32,8 @@ $schema = SchemaHelper::generateFromRequest(new ModelStoreRequest())
 - `toArray()`: Returns the schema as a PHP array.
 - `toJson()`: Returns the schema as a JSON string.
 - `toJsonResponse()`: Returns the schema as a Laravel JSON response.
-- `toVueSchema()`: Returns the schema formatted for Vue components.
-- `toReactSchema()`: Returns the schema formatted for React components.
+- `toVueSchema()`: Returns the schema formatted for Vue components. (Alpha, test required)
+- `toReactSchema()`: Returns the schema formatted for React components. (Alpha, test required)
 
 ## Output Example
 
@@ -62,3 +73,67 @@ $schema = SchemaHelper::generateFromRequest(new ModelStoreRequest())
     },
 ]
 ```
+
+## Route Registration Modes
+
+By default, all schema endpoints are registered **inline** under the `api` middleware, using the prefix defined in `config/schema-helper.php`.
+
+### Inline Mode (default)
+
+```php
+Route::middleware('api')->prefix('api/schemas')->group(function() {
+    Route::get('/', …)->name('schemas.index');
+    Route::get('user', …)->name('schemas.user');
+    // etc.
+});
+```
+
+* **Toggle it off** by setting in your `.env`:
+
+```dotenv
+SCHEMA_HELPER_ROUTE_MODE=file
+```
+
+### File Mode
+
+If you prefer to keep your routes in a separate file, switch to **file** mode:
+
+1. Publish the config and set the mode:
+
+    ```bash
+    php artisan vendor:publish --tag=config
+    ```
+
+    ```dotenv
+    SCHEMA_HELPER_ROUTE_MODE=file
+    SCHEMA_HELPER_ROUTES_FILE=routes/schema-helper.php
+    ```
+
+2. Create `routes/schema-helper.php` in your app:
+
+    ```php
+    <?php
+
+    use Illuminate\Support\Facades\Route;
+    use Kroderdev\SchemaHelper\SchemaHelper;
+
+    $schemas = config('schema-helper.schemas', []);
+
+    Route::get('/schemas', function() use ($schemas) {
+        $list = [];
+        foreach ($schemas as $key => $req) {
+            $list[$key] = route("schemas.$key", [], false);
+        }
+        return response()->json(['available_schemas' => $list]);
+    })->name('schemas.index');
+
+    foreach ($schemas as $key => $req) {
+        Route::get("/schemas/{$key}", function() use ($req) {
+            return response()->json(
+                SchemaHelper::fromRequest(new $req())->toArray()
+            );
+        })->name("schemas.{$key}");
+    }
+    ```
+
+Now you have full control: **inline** mode for zero-touch endpoint registration, or **file** mode if you’d rather manage all routes in your own `routes/` folder.
