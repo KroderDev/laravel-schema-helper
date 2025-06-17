@@ -27,7 +27,7 @@ class SchemaServiceProvider extends ServiceProvider
         // Publish configuration
         $this->publishes([
             __DIR__.'/../config/schema-helper.php' => config_path('schema-helper.php'),
-        ]);
+        ], 'config');
 
         // How to load the routes
         $mode = config('schema-helper.route_mode', 'inline');
