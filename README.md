@@ -1,4 +1,7 @@
 # Laravel-Schema-Helper
+
+[![Packagist Version](https://img.shields.io/packagist/v/kroderdev/laravel-schema-helper.svg)](https://packagist.org/packages/kroderdev/laravel-schema-helper) [![Downloads](https://img.shields.io/packagist/dt/kroderdev/laravel-schema-helper.svg)](https://packagist.org/packages/kroderdev/laravel-schema-helper) [![License](https://img.shields.io/packagist/l/kroderdev/laravel-schema-helper.svg)](LICENSE)
+
 Generate portable form schemas from Laravel FormRequests
 
 ## Installation
