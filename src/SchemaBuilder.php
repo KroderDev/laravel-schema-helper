@@ -143,7 +143,7 @@ class SchemaBuilder
     {
         $ruleString = Str::lower(implode('|', $rules));
 
-        if (Str::contains($ruleString, 'in:') || Str::contains($ruleString, 'exists:')) {
+        if (preg_match('/(?:^|\|)in:/', $ruleString) || Str::contains($ruleString, 'exists:')) {
             return 'select';
         }
 
@@ -153,7 +153,6 @@ class SchemaBuilder
             Str::contains($ruleString, 'integer') => 'integer',
             Str::contains($ruleString, 'numeric') => 'decimal',
             Str::contains($ruleString, 'string')  => 'string',
-            Str::contains($ruleString, 'in')      => 'select',
             default => 'string',
         };
     }
